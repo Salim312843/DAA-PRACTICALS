@@ -18,57 +18,6 @@ Design and implement an algorithm to:
 
 ---
 
-# 🔍 Question Analysis (What & Why)
-
-### 1️⃣ "Sets of n positive integers"
-👉 What:
-- Two collections of integers
-
-👉 Why:
-- Perform **set operations (union & intersection)**
-
----
-
-### 2️⃣ "Union"
-👉 What:
-- All unique elements from both sets
-
-👉 Why:
-- Combine both sets without duplicates
-
----
-
-### 3️⃣ "Intersection"
-👉 What:
-- Common elements in both sets
-
-👉 Why:
-- Find overlapping elements
-
----
-
-### 4️⃣ "Compute time complexity"
-👉 What:
-- Analyze efficiency
-
-👉 Why:
-- Compare different approaches
-
----
-
-# 📘 Definitions
-
-### Union
-```
-S1 ∪ S2 = {elements in S1 OR S2}
-```
-
-### Intersection
-```
-S1 ∩ S2 = {elements common in both}
-```
-
----
 
 # 🚀 Approaches
 
@@ -91,6 +40,54 @@ S1 ∩ S2 = {elements common in both}
   - Check in S2
   - If found → add to result
 
+```
+# 🔹 Approach Logic (Code Snippets)
+
+---
+
+## 1️⃣ Brute Force Approach
+
+### 🔸 Union Logic
+```java
+List<Integer> union = new ArrayList<>();
+
+// Add all elements of S1
+for (int i = 0; i < S1.length; i++) {
+    union.add(S1[i]);
+}
+
+// Add elements of S2 if not present
+for (int i = 0; i < S2.length; i++) {
+    boolean found = false;
+    for (int j = 0; j < S1.length; j++) {
+        if (S2[i] == S1[j]) {
+            found = true;
+            break;
+        }
+    }
+    if (!found) {
+        union.add(S2[i]);
+    }
+}
+```
+
+---
+
+### 🔸 Intersection Logic
+```
+List<Integer> intersection = new ArrayList<>();
+
+for (int i = 0; i < S1.length; i++) {
+    for (int j = 0; j < S2.length; j++) {
+        if (S1[i] == S2[j]) {
+            intersection.add(S1[i]);
+            break;
+        }
+    }
+}
+```
+
+---
 ### Time Complexity
 ```
 O(n²)
@@ -98,7 +95,7 @@ O(n²)
 
 ### Space Complexity
 ```
-O(n)
+O(n)   :   Extra space used to store union/intersection result
 ```
 
 ### Limitation
@@ -123,13 +120,12 @@ O(n)
 
 ### Time Complexity
 ```
-O(n log n)
+O(n log n)     :     (Sorting dominates)
 ```
-(Sorting dominates)
 
 ### Space Complexity
 ```
-O(n)
+O(n)      :      Space required to store result arrays
 ```
 
 ### Limitation
@@ -137,6 +133,51 @@ O(n)
 
 ---
 
+### 🔸 Union Logic
+```
+Arrays.sort(S1);
+Arrays.sort(S2);
+
+int i = 0, j = 0;
+List<Integer> union = new ArrayList<>();
+
+while (i < S1.length && j < S2.length) {
+    if (S1[i] < S2[j]) {
+        union.add(S1[i++]);
+    } else if (S1[i] > S2[j]) {
+        union.add(S2[j++]);
+    } else {
+        union.add(S1[i]);
+        i++; j++;
+    }
+}
+
+// Remaining elements
+while (i < S1.length) union.add(S1[i++]);
+while (j < S2.length) union.add(S2[j++]);
+```
+
+---
+
+### 🔸 Intersection Logic
+```
+Arrays.sort(S1);
+Arrays.sort(S2);
+
+int i = 0, j = 0;
+List<Integer> intersection = new ArrayList<>();
+
+while (i < S1.length && j < S2.length) {
+    if (S1[i] < S2[j]) {
+        i++;
+    } else if (S1[i] > S2[j]) {
+        j++;
+    } else {
+        intersection.add(S1[i]);
+        i++; j++;
+    }
+}
+```
 ## 3️⃣ HashSet Approach (Optimal) ⭐
 
 ### Idea
@@ -153,51 +194,21 @@ O(n)
 
 ### Time Complexity
 ```
-O(n)
+O(n)    :       Insertion into HashSet → O(1) (average)
+              - Checking element (contains) → O(1)
+              - We process each element once → **O(n)**
 ```
 
 ### Space Complexity
 ```
-O(n)
+O(n)    :       HashSet stores up to `n` elements
+               - Result sets also take space
 ```
 
 ### Advantage
 - Fastest approach
 - Handles duplicates automatically
 
----
-
-# 💻 Implementation (Java)
-
-```java
-import java.util.*;
-
-public class SetOperations {
-    public static void main(String[] args) {
-        int[] S1 = {1, 2, 3, 4};
-        int[] S2 = {3, 4, 5, 6};
-
-        Set<Integer> union = new HashSet<>();
-        Set<Integer> intersection = new HashSet<>();
-
-        // Union
-        for (int num : S1) union.add(num);
-        for (int num : S2) union.add(num);
-
-        // Intersection
-        Set<Integer> set1 = new HashSet<>();
-        for (int num : S1) set1.add(num);
-
-        for (int num : S2) {
-            if (set1.contains(num)) {
-                intersection.add(num);
-            }
-        }
-
-        System.out.println("Union: " + union);
-        System.out.println("Intersection: " + intersection);
-    }
-}
 ```
 
 ---
